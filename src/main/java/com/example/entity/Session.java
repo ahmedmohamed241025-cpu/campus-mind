@@ -34,6 +34,6 @@ public class Session {
     @ManyToOne
     @JoinColumn(name = "location_id")
     private Location location;
-
+    private String name;
 
 }
