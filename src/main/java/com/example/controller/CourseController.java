@@ -1,44 +1,54 @@
 package com.example.controller;
 
-import com.example.entity.Course;
+import com.example.dto.CourseDto;
 import com.example.service.CourseService;
+import jakarta.validation.Valid;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/courses")
+
 public class CourseController {
 
-    private final CourseService services;
+    private final CourseService courseService;
 
-    public CourseController (CourseService services) {
-        this.services= services;
+    public CourseController (CourseService courseService) {
+        this.courseService= courseService;
     }
 // CREATE
-    @PostMapping("/create")
-    public Course createCourse(@RequestBody Course course) {
-        return services.createCourse(course);
-    }
 
+    @PostMapping("/create")
+    public ResponseEntity<CourseDto.CourseResponse> createCourse(
+            @Valid @RequestBody CourseDto.CourseRequest request) {
+        return new ResponseEntity<>(courseService.createCourse(request), HttpStatus.CREATED);
+    }
     // GET ALL
     @GetMapping
-    public List<Course> getAllCourses() {
-        return services.getAllCourses();
+    public ResponseEntity<List<CourseDto.CourseResponse>> getAllCourses() {
+        return ResponseEntity.ok(courseService.getAllCourses());
     }
+
     // GET BY ID
     @GetMapping("/{id}")
-    public Course getById(@PathVariable Long id){
-        return services.getById(id);
+    public ResponseEntity<CourseDto.CourseResponse> getById(@PathVariable Long id) {
+        return ResponseEntity.ok(courseService.getById(id));
     }
+
     // UPDATE
     @PutMapping("/{id}")
-    public void update(@PathVariable Long id, @RequestBody Course course){
-        services.update(id, course);
+    public ResponseEntity<CourseDto.CourseResponse> update(
+            @PathVariable Long id,
+            @Valid @RequestBody CourseDto.CourseUpdateRequest request) {
+        return ResponseEntity.ok(courseService.update(id, request));
     }
     // DELETE
     @DeleteMapping("/{id}")
-    public void deleteById(@PathVariable Long id){
-        services.deleteById(id);
+    public ResponseEntity<Void> deleteById(@PathVariable Long id) {
+        courseService.deleteById(id);
+        return ResponseEntity.noContent().build();
     }
 }

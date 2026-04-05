@@ -17,7 +17,8 @@ public class Student {
     private Long id;
     private String academicNumber;
     private String level;
-
+    private String name;
+    private String email;
     @OneToOne
     @JoinColumn(name = "user_id", unique = true)
     private User user;
