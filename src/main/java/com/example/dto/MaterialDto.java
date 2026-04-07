@@ -1,5 +1,6 @@
 package com.example.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
@@ -7,16 +8,13 @@ import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class MaterialDto {
 
-
-
-        // >>>>>>>>>>MaterialRequest (إنشاء مادة جديدة) <<<<<<<<<<<<<<<<<>>>>>>>>
-        @Data
-        @NoArgsConstructor
-        @AllArgsConstructor
-        public static class MaterialRequest {
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    private String id;
 
             @NotBlank(message = "Material title cannot be blank")
             @Size(min = 3, max = 100, message = "Title must be between 3 and 100 characters")
@@ -28,37 +26,8 @@ public class MaterialDto {
             @Pattern(regexp = "^(http|https)://.*$", message = "Video URL must be a valid URL")
             private String videoUrl;
 
-            @NotNull(message = "Course ID is required")
+            @NotNull(message = "Course ID is required") //لازم يحدد الكورس الى تابع ليه
             private Long courseId;
-        }
 
-        // ===== MaterialResponse (الرد للطالب) =====
-        @Data
-        @NoArgsConstructor
-        @AllArgsConstructor
-        public static class MaterialResponse {
-            private Long id;
-            private String title;
-            private String pdfUrl;
-            private String videoUrl;
-            private Long courseId;
-            private String courseName;
-        }
-
-        // ===== MaterialUpdateRequest (تحديث المادة) =====
-        @Data
-        @NoArgsConstructor
-        @AllArgsConstructor
-        public static class MaterialUpdateRequest {
-
-            @Size(min = 3, max = 100, message = "Title must be between 3 and 100 characters")
-            private String title;
-
-            @Pattern(regexp = "^(http|https)://.*$", message = "PDF URL must be a valid URL")
-            private String pdfUrl;
-
-            @Pattern(regexp = "^(http|https)://.*$", message = "Video URL must be a valid URL")
-            private String videoUrl;
-        }
-    }
+}
 

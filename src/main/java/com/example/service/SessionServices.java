@@ -20,40 +20,40 @@ public class SessionServices {
 
 
     //  DTO → Entity
-    private Session convertToEntity(SessionDto.SessionRequest dto) {
+    private Session convertToEntity(SessionDto dto) {
         Session session = new Session();
 
         return session;
     }
 
     //  Entity → DTO
-    private SessionDto.SessionResponse convertToResponse(Session session) {
-        SessionDto.SessionResponse response = new SessionDto.SessionResponse();
+    private SessionDto convertToResponse(Session session) {
+        SessionDto response = new SessionDto();
 
         return response;
     }
     // CREATE
-    public SessionDto.SessionResponse createSession(SessionDto.SessionRequest request) {
+    public SessionDto createSession(SessionDto request) {
         Session session = convertToEntity(request);
         Session saved = repo.save(session);
         return convertToResponse(saved);
     }
 
     // GET ALL -
-    public List<SessionDto.SessionResponse> getAllSessions() {
+    public List<SessionDto> getAllSessions() {
         return repo.findAll().stream()
                 .map(this::convertToResponse)
                 .collect(Collectors.toList());
     }
 
     // GET BY ID
-    public SessionDto.SessionResponse getById(Long id) {
+    public SessionDto getById(Long id) {
         Session session = repo.findById(id)
                 .orElseThrow(() -> new RuntimeException("Session not found"));
         return convertToResponse(session);
     }
     // UPDATE
-    public SessionDto.SessionResponse update(Long id, SessionDto.SessionUpdateRequest request) {
+    public SessionDto update(Long id, SessionDto request) {
 
         Session session = repo.findById(id)
                 .orElseThrow(() -> new RuntimeException("Session not found with id: " + id));

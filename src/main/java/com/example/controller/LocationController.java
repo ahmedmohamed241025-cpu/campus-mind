@@ -6,6 +6,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -17,30 +18,31 @@ public class LocationController {
 
     private final LocationService service;
 
+
     //  CREATE
     @PostMapping("/create")
-    public ResponseEntity<LocationDto.LocationResponse> createLocation(
-            @Valid @RequestBody LocationDto.LocationRequest request) {
+    public ResponseEntity<LocationDto> createLocation(
+            @Valid @RequestBody LocationDto request) {
         return new ResponseEntity<>(service.createLocation(request), HttpStatus.CREATED);
     }
 
     //  GET ALL
     @GetMapping
-    public ResponseEntity<List<LocationDto.LocationResponse>> getAllLocations() {
+    public ResponseEntity<List<LocationDto>> getAllLocations() {
         return ResponseEntity.ok(service.getAllLocations());
     }
 
     //  GET BY ID
     @GetMapping("/{id}")
-    public ResponseEntity<LocationDto.LocationResponse> getById(@PathVariable Long id) {
+    public ResponseEntity<LocationDto> getById(@PathVariable Long id) {
         return ResponseEntity.ok(service.getById(id));
     }
 
     // UPDATE
     @PutMapping("/{id}")
-    public ResponseEntity<LocationDto.LocationResponse> update(
+    public ResponseEntity<LocationDto> update(
             @PathVariable Long id,
-            @Valid @RequestBody LocationDto.LocationUpdateRequest request) {
+            @Valid @RequestBody LocationDto request) {
         return ResponseEntity.ok(service.update(id, request));
     }
 

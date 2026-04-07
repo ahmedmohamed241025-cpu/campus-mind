@@ -7,11 +7,11 @@ import com.example.entity.Material;
 import com.example.repository.CourseRepository;
 import com.example.repository.MaterialRepository;
 import jakarta.transaction.Transactional;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Collection;
 
 @Service
 @RequiredArgsConstructor
@@ -21,58 +21,48 @@ public class MaterialServices {
     private final MaterialRepository repo;
     private final CourseRepository courseRepo;
 
-    //  DTO → Entity
-    private Material convertToEntity(MaterialDto.MaterialRequest dto) {
-        Material material = new Material();
-        material.setTitle(dto.getTitle());
-        material.setPdfUrl(dto.getPdfUrl());
-        material.setVideoUrl(dto.getVideoUrl());
 
-        Course course = courseRepo.findById(dto.getCourseId())
-                .orElseThrow(() -> new RuntimeException("Course not found: " + dto.getCourseId()));
+
+    public MaterialDto materialUpload(@Valid MaterialDto request) {
+
+        Material material = new Material();
+        material.setTitle(request.getTitle());
+        material.setPdfUrl(request.getPdfUrl());
+        material.setVideoUrl(request.getVideoUrl());
+
+        //  (تحويل courseId → Course)
+        Course course = courseRepo.findById(request.getCourseId())
+                .orElseThrow(() -> new RuntimeException("Course not found"));
+
         material.setCourse(course);
 
-        return material;
-    }
-    //  Entity → DTO
-    private MaterialDto.MaterialResponse convertToResponse(Material material) {
-        MaterialDto.MaterialResponse response = new MaterialDto.MaterialResponse();
-        response.setId(material.getId());
-        response.setTitle(material.getTitle());
-        response.setPdfUrl(material.getPdfUrl());
-        response.setVideoUrl(material.getVideoUrl());
+        Material saved = repo.save(material);
 
-        if (material.getCourse() != null) {
-            response.setCourseId(material.getCourse().getId());
-            response.setCourseName(material.getCourse().getName());
-        }
+        // تحويل للـ DTO
+        MaterialDto response = new MaterialDto();
+        response.setId(String.valueOf(saved.getId()));
+        response.setTitle(saved.getTitle());
+        response.setPdfUrl(saved.getPdfUrl());
+        response.setVideoUrl(saved.getVideoUrl());
+        response.setCourseId(saved.getCourse().getId());
 
         return response;
     }
 
 
-
-    //  CREATE
-    public MaterialDto.MaterialResponse materialUpload(MaterialDto.MaterialRequest request) {
-        return convertToResponse(repo.save(convertToEntity(request)));
-    }
-
     // GET ALL
-    public List<MaterialDto.MaterialResponse> getAll() {
-        return repo.findAll().stream()
-                .map(this::convertToResponse)
-                .collect(Collectors.toList());
+    public Collection<Material> getAll() {
+        return repo.findAll();
     }
 
     //  GET BY ID
-    public MaterialDto.MaterialResponse getById(Long id) {
-        Material material = repo.findById(id)
+    public Material getById(Long id) {
+        return repo.findById(id)
                 .orElseThrow(() -> new RuntimeException("Material not found with id: " + id));
-        return convertToResponse(material);
     }
 
     //  UPDATE
-    public MaterialDto.MaterialResponse update(Long id, MaterialDto.MaterialUpdateRequest request) {
+    public MaterialDto update(Long id, @Valid MaterialDto request) {
         Material material = repo.findById(id)
                 .orElseThrow(() -> new RuntimeException("Material not found with id: " + id));
 
@@ -80,7 +70,7 @@ public class MaterialServices {
         if (request.getPdfUrl() != null) material.setPdfUrl(request.getPdfUrl());
         if (request.getVideoUrl() != null) material.setVideoUrl(request.getVideoUrl());
 
-        return convertToResponse(repo.save(material));
+        return new MaterialDto();
     }
     //  DELETE
     public void delete(Long id) {

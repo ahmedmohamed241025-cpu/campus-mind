@@ -3,6 +3,7 @@ package com.example.controller;
 
 import com.example.dto.MaterialDto;
 
+import com.example.entity.Material;
 import com.example.service.MaterialServices;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -10,7 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+import java.util.Collection;
 
 @RestController
 @RequestMapping("/api/materials")
@@ -22,28 +23,28 @@ public class MaterialController {
 
     //  CREATE
     @PostMapping("/upload")
-    public ResponseEntity<MaterialDto.MaterialResponse> materialUpload(
-            @Valid @RequestBody MaterialDto.MaterialRequest request) {
+    public ResponseEntity<MaterialDto> materialUpload(
+            @Valid @RequestBody MaterialDto request) {
         return new ResponseEntity<>(services.materialUpload(request), HttpStatus.CREATED);
     }
 
     //  GET ALL
     @GetMapping
-    public ResponseEntity<List<MaterialDto.MaterialResponse>> getAll() {
+    public ResponseEntity<Collection<Material>> getAll() {
         return ResponseEntity.ok(services.getAll());
     }
 
     // GET BY ID
     @GetMapping("/{id}")
-    public ResponseEntity<MaterialDto.MaterialResponse> getById(@PathVariable Long id) {
+    public ResponseEntity<Material> getById(@PathVariable Long id) {
         return ResponseEntity.ok(services.getById(id));
     }
 
     // UPDATE
     @PutMapping("/{id}")
-    public ResponseEntity<MaterialDto.MaterialResponse> update(
+    public ResponseEntity<MaterialDto> update(
             @PathVariable Long id,
-            @Valid @RequestBody MaterialDto.MaterialUpdateRequest request) {
+            @Valid @RequestBody MaterialDto request) {
         return ResponseEntity.ok(services.update(id, request));
     }
 

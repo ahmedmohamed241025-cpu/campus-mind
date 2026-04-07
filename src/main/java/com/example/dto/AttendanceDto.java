@@ -1,68 +1,40 @@
 package com.example.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
-import jakarta.validation.constraints.NotNull;
+
+
 import com.example.model.Status;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
-
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 
     public class AttendanceDto {
 
-        // ===== AttendanceRequest (تسجيل حضور) =====
-        @Data
-        @NoArgsConstructor
-        @AllArgsConstructor
-        public static class MarkRequest {
 
-            @NotNull(message = "Student ID is required")
-            private Long studentId;
+    @JsonProperty(access =  JsonProperty.Access.READ_ONLY)
+    private Long id;
 
-            @NotNull(message = "Session ID is required")
-            private Long sessionId;
-        }
+    @NotNull(message = "Student ID is required")
+    @JsonProperty(access =  JsonProperty.Access.READ_ONLY)
+    private Long studentId;
 
-        // ===== AttendanceRequest (إنشاء حضور) =====
-        @Data
-        @NoArgsConstructor
-        @AllArgsConstructor
-        public static class AttendanceRequest {
+    @NotNull(message = "Student ID is required")
+    @JsonProperty(access =  JsonProperty.Access.READ_ONLY)
+    private Long sessionId;
 
-            @NotNull(message = "Status is required")
-            private Status status;
+    @NotNull(message = "Status is required")
+    private Status status;
 
-            @NotNull(message = "Student ID is required")
-            private Long studentId;
-
-            @NotNull(message = "Session ID is required")
-            private Long sessionId;
-        }
-
-        // ===== AttendanceResponse (الرد للعميل) =====
-        @Data
-        @NoArgsConstructor
-        @AllArgsConstructor
-        public static class AttendanceResponse {
-            private Long id;
-            private Status status;
             private LocalDateTime timestamp;
-            private Long studentId;
             private String studentName;
-            private Long sessionId;
             private String sessionName;
         }
 
-        // ===== AttendanceUpdateRequest (تحديث الحضور) =====
-        @Data
-        @NoArgsConstructor
-        @AllArgsConstructor
-        public static class AttendanceUpdateRequest {
-
-            @NotNull(message = "Status is required")
-            private Status status;
-        }
-    }
 

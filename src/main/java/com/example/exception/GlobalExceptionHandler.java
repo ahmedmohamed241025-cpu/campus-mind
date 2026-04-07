@@ -41,7 +41,6 @@ public class GlobalExceptionHandler {
             return error;
         }
 
-
         @ExceptionHandler(Exception.class)
         @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
         public Map<String, Object> handleGenericException(Exception ex) {

@@ -20,29 +20,26 @@ public class CourseController {
         this.courseService= courseService;
     }
 // CREATE
-
     @PostMapping("/create")
-    public ResponseEntity<CourseDto.CourseResponse> createCourse(
-            @Valid @RequestBody CourseDto.CourseRequest request) {
+    public ResponseEntity<CourseDto> createCourse(
+            @Valid @RequestBody CourseDto request) {
         return new ResponseEntity<>(courseService.createCourse(request), HttpStatus.CREATED);
     }
     // GET ALL
     @GetMapping
-    public ResponseEntity<List<CourseDto.CourseResponse>> getAllCourses() {
+    public ResponseEntity<List<CourseDto>> getAllCourses() {
         return ResponseEntity.ok(courseService.getAllCourses());
     }
-
     // GET BY ID
     @GetMapping("/{id}")
-    public ResponseEntity<CourseDto.CourseResponse> getById(@PathVariable Long id) {
+    public ResponseEntity<CourseDto> getById(@PathVariable Long id) {
         return ResponseEntity.ok(courseService.getById(id));
     }
-
     // UPDATE
     @PutMapping("/{id}")
-    public ResponseEntity<CourseDto.CourseResponse> update(
+    public ResponseEntity<CourseDto> update(
             @PathVariable Long id,
-            @Valid @RequestBody CourseDto.CourseUpdateRequest request) {
+            @Valid @RequestBody CourseDto request) {
         return ResponseEntity.ok(courseService.update(id, request));
     }
     // DELETE

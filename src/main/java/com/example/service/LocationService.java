@@ -4,8 +4,10 @@ import com.example.dto.LocationDto;
 import com.example.entity.Location;
 import com.example.repository.LocationRepository;
 import jakarta.transaction.Transactional;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -19,7 +21,7 @@ public class LocationService {
     private final LocationRepository repo;
 
     //  DTO → Entity
-    private Location convertToEntity(LocationDto.LocationRequest dto) {
+    private Location convertToEntity(LocationDto dto) {
         Location location = new Location();
         location.setName(dto.getName());
         location.setLatitude(dto.getLatitude());
@@ -28,8 +30,8 @@ public class LocationService {
     }
 
     //  Entity → DTO
-    private LocationDto.LocationResponse convertToResponse(Location location) {
-        LocationDto.LocationResponse response = new LocationDto.LocationResponse();
+    private LocationDto convertToResponse(Location location) {
+        LocationDto response = new LocationDto();
         response.setId(location.getId());
         response.setName(location.getName());
         response.setLatitude(location.getLatitude());
@@ -38,28 +40,28 @@ public class LocationService {
     }
 
     //  CREATE
-    public LocationDto.LocationResponse createLocation(LocationDto.LocationRequest request) {
+    public LocationDto createLocation(@Valid LocationDto request) {
         Location location = convertToEntity(request);
         Location savedLocation = repo.save(location);
         return convertToResponse(savedLocation);
     }
 
     //  GET ALL
-    public List<LocationDto.LocationResponse> getAllLocations() {
+    public List<LocationDto> getAllLocations() {
         return repo.findAll().stream()
                 .map(this::convertToResponse)
                 .collect(Collectors.toList());
     }
 
     // GET BY ID
-    public LocationDto.LocationResponse getById(Long id) {
+    public LocationDto getById(Long id) {
         Location location = repo.findById(id)
                 .orElseThrow(() -> new RuntimeException("Location not found with id: " + id));
         return convertToResponse(location);
     }
 
     //  UPDATE
-    public LocationDto.LocationResponse update(Long id, LocationDto.LocationUpdateRequest request) {
+    public LocationDto update(Long id, @Valid @RequestBody LocationDto request) {
         Location location = repo.findById(id)
                 .orElseThrow(() -> new RuntimeException("Location not found with id: " + id));
 
